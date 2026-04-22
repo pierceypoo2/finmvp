@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Gift, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, Compass, Gift, Sparkles, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -10,25 +11,36 @@ const showDevHint =
   !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes("PASTE");
 
-const SLIDE_COUNT = 3;
+const SLIDE_COUNT = 4;
 
 const slides = [
   {
+    icon: Compass,
+    headline: "What you're looking at",
+    sub: "A calmer read on cash flow and debt—no scolding, no spreadsheet cosplay. Connect when you like, or use manual mode, and go at your own pace.",
+    accent: "from-sky-400 to-indigo-500",
+    bullets: [
+      "Home: the snapshot and the longer view, when you have data.",
+      "A natural path is intake → cash flow → debt—skip ahead if you already know the score.",
+      "Points nudge progress; extra tools show up when the math makes sense, not to rush you.",
+    ],
+  },
+  {
     icon: TrendingUp,
     headline: "Cash flow first, not guilt charts",
-    sub: "Connect accounts and calibrate transactions fast—built for directives and payoff math, not passive pie slices.",
+    sub: "Connect accounts and calibrate at your speed. The point is a clear story you can act on, not a pie chart to babysit.",
     accent: "from-emerald-400 to-cyan-400",
   },
   {
     icon: Sparkles,
-    headline: "Level the pillars",
-    sub: "Progress through stages—cash flow, debt, then wealth. Points and quests track momentum, not endless budgeting homework.",
+    headline: "One step at a time",
+    sub: "Cash flow, then debt, then wealth when you’re ready. Light milestones—not a guilt trip, not another evening lost to categories.",
     accent: "from-violet-400 to-indigo-400",
   },
   {
     icon: Gift,
-    headline: "Gated partner lab",
-    sub: "Investment and advanced tools stay locked until your numbers prove you’re ready—rewards for discipline, not signup banners.",
+    headline: "Partner tools, when you want them",
+    sub: "Investing and advanced options stay out of the way until your numbers support them. No blinking signup walls—no pressure to look “ready enough.”",
     accent: "from-orange-400 to-rose-400",
   },
 ];
@@ -87,8 +99,20 @@ export function HomeMarketing() {
 
   const isLastSlide = current >= SLIDE_COUNT - 1;
 
+  const skipToApp = useCallback(() => {
+    router.push("/dashboard");
+  }, [router]);
+
   return (
     <div className="flex min-h-dvh flex-col bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-white">
+      <div className="pointer-events-auto fixed top-5 left-5 z-30">
+        <Link
+          href="/intro"
+          className="text-[13px] font-light text-slate-500 underline decoration-slate-400/40 underline-offset-2 transition hover:text-slate-700 dark:text-white/40 dark:decoration-white/15 dark:hover:text-white/60"
+        >
+          Slower, fuller read
+        </Link>
+      </div>
       <div className="pointer-events-auto fixed top-12 left-1/2 z-20 flex -translate-x-1/2 gap-2">
         {slides.map((_, i) => (
           <button
@@ -141,6 +165,16 @@ export function HomeMarketing() {
             >
               {s.sub}
             </motion.p>
+            {"bullets" in s && s.bullets && s.bullets.length > 0 && (
+              <ul className="mt-5 max-w-sm space-y-2.5 text-left text-[14px] font-light leading-snug text-slate-600 dark:text-white/50">
+                {s.bullets.map((line) => (
+                  <li key={line} className="flex gap-2">
+                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-emerald-500/80" />
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         ))}
       </div>
@@ -149,10 +183,17 @@ export function HomeMarketing() {
         <button
           type="button"
           onClick={goNextOrApp}
-          className="hit-44 flex w-full max-w-sm touch-manipulation items-center justify-center gap-2 rounded-full bg-white px-12 py-4 text-[15px] font-semibold text-slate-900 transition active:scale-[0.97]"
+          className="hit-44 flex w-full max-w-sm touch-manipulation items-center justify-center gap-2 rounded-full border border-slate-200/90 bg-white px-12 py-4 text-[15px] font-medium text-slate-800 shadow-sm transition active:scale-[0.99] dark:border-white/[0.12] dark:bg-white/[0.08] dark:text-white"
         >
-          {isLastSlide ? "Get started" : "Continue"}
-          <ArrowRight className="h-4 w-4" />
+          {isLastSlide ? "Open the app" : "Next"}
+          {!isLastSlide && <ArrowRight className="h-4 w-4" />}
+        </button>
+        <button
+          type="button"
+          onClick={skipToApp}
+          className="text-[13px] font-light text-slate-500 underline-offset-2 transition hover:text-slate-700 dark:text-white/40 dark:hover:text-white/60"
+        >
+          Skip and go to the app
         </button>
         {showDevHint && (
           <p className="text-xs font-light text-amber-400/60">

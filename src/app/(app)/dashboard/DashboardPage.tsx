@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardWelcomeCard } from "@/components/DashboardWelcomeCard";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassSlideUnlock } from "@/components/GlassSlideUnlock";
 import { Pillar3GateHint } from "@/components/Pillar3GateHint";
@@ -245,6 +246,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-7 pt-2">
+      <DashboardWelcomeCard />
       {/* ── hero: investing deploy after Pillar 3 gate vs. cashflow snapshot ── */}
       {wealthLabUnlocked ? (
         <div>
